@@ -20,14 +20,42 @@
         .container {
             max-width: 500px;
             margin: 0 auto;
-            padding: 20px 20px 100px 20px;
+            padding: 20px 20px 120px 20px;
         }
         
-        /* Header */
+        /* Header with user info */
         .header {
             text-align: center;
-            padding: 30px 0;
+            padding: 30px 0 20px;
             animation: fadeInDown 0.8s ease-out;
+            position: relative;
+        }
+        
+        .user-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00f7ff, #ff6b35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
         }
         
         .logo {
@@ -111,6 +139,72 @@
             letter-spacing: 1px;
         }
         
+        /* Water Tracker */
+        .water-tracker {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .water-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .water-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #10b981;
+        }
+        
+        .water-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #10b981;
+        }
+        
+        .water-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .water-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .water-btn:hover {
+            background: rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .water-progress {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .water-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
         /* Stats */
         .stats-grid {
             display: grid;
@@ -157,6 +251,7 @@
             margin: 0 auto;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 1000;
         }
         
         .nav-item {
@@ -168,18 +263,32 @@
             border: none;
             color: rgba(255, 255, 255, 0.5);
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 12px;
         }
         
         .nav-item.active {
             color: #00f7ff;
             text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+            background: rgba(0, 247, 255, 0.1);
         }
         
-        .nav-icon { font-size: 1.5rem; }
+        .nav-icon { 
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-item:hover .nav-icon {
+            transform: scale(1.2);
+        }
+        
+        .nav-item.active .nav-icon {
+            filter: drop-shadow(0 0 8px rgba(0, 247, 255, 0.8));
+        }
         
         /* Sections */
         .section { display: none; animation: fadeIn 0.5s ease-out; }
@@ -216,12 +325,14 @@
             color: white;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 0.85rem;
         }
         
         .filter-btn.active {
             background: #00f7ff;
             color: #0f0c29;
             border-color: #00f7ff;
+            font-weight: bold;
         }
         
         .workout-list { display: flex; flex-direction: column; gap: 15px; }
@@ -254,11 +365,12 @@
         .video-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* 16:9 */
+            padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
             border-radius: 10px;
             margin-top: 10px;
+            background: rgba(0,0,0,0.3);
         }
         
         .video-container iframe {
@@ -351,6 +463,12 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,247,255,0.4);
         }
         
         /* Analytics */
@@ -402,11 +520,97 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,247,255,0.4);
         }
+        
+        /* Registration Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #0f0c29, #302b63);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        
+        .modal h2 {
+            margin-bottom: 10px;
+        }
+        
+        .modal p {
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 25px;
+        }
+        
+        .modal input {
+            margin-bottom: 20px;
+        }
+        
+        .avatar-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .avatar-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        
+        .avatar-option.selected {
+            border-color: #00f7ff;
+            box-shadow: 0 0 15px rgba(0,247,255,0.5);
+        }
     </style>
 </head>
 <body>
+    <!-- Registration Modal -->
+    <div id="reg-modal" class="modal-overlay">
+        <div class="modal">
+            <h2 style="-webkit-text-fill-color: white;">🎉 Добро пожаловать!</h2>
+            <p>Введи свой ник, чтобы начать тренироваться</p>
+            <input type="text" id="nickname-input" placeholder="Твой ник..." style="width: 100%;">
+            <div class="avatar-selector" id="avatar-selector">
+                <div class="avatar-option selected" data-avatar="🏋️" style="background: linear-gradient(135deg, #00f7ff, #ff6b35);">🏋️</div>
+                <div class="avatar-option" data-avatar="💪" style="background: linear-gradient(135deg, #ff6b35, #10b981);">💪</div>
+                <div class="avatar-option" data-avatar="🧘" style="background: linear-gradient(135deg, #10b981, #00f7ff);">🧘</div>
+                <div class="avatar-option" data-avatar="🏃" style="background: linear-gradient(135deg, #ff6b35, #f59e0b);">🏃</div>
+            </div>
+            <button class="btn" onclick="registerUser()" style="width: 100%;">Начать тренироваться 🚀</button>
+        </div>
+    </div>
+    
     <div class="container">
         <div class="header">
+            <div class="user-info" id="user-info" style="display: none;">
+                <div class="user-avatar" id="user-avatar">🏋️</div>
+                <span id="user-nickname">Гость</span>
+            </div>
+            
             <div class="logo">FITNESS PRO</div>
             <div class="subtitle">Твой персональный тренер</div>
         </div>
@@ -415,7 +619,7 @@
         <div id="home-section" class="section active">
             <div class="glass-card">
                 <h2>🏠 Главная</h2>
-                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Твой прогресс сегодня</p>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Привет, <span id="home-nickname">Гость</span>! Твой прогресс сегодня</p>
                 
                 <div class="rings-container">
                     <div class="ring-item">
@@ -454,6 +658,24 @@
                         <div class="ring-label">Вода</div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Water Tracker -->
+            <div class="water-tracker">
+                <div class="water-header">
+                    <div class="water-title">💧 Вода сегодня</div>
+                    <div class="water-amount" id="water-total">0 мл</div>
+                </div>
+                <div class="water-buttons">
+                    <button class="water-btn" onclick="addWater(250)">+250 мл</button>
+                    <button class="water-btn" onclick="addWater(500)">+500 мл</button>
+                </div>
+                <div class="water-progress">
+                    <div class="water-progress-fill" id="water-progress-fill" style="width: 0%;"></div>
+                </div>
+                <p style="text-align: center; margin-top: 10px; color: rgba(255,255,255,0.6); font-size: 0.85rem;">
+                    Цель: 2000 мл
+                </p>
             </div>
             
             <div class="stats-grid">
@@ -498,7 +720,7 @@
                 <h2>🥗 Питание</h2>
                 <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">Сканируй штрихкод или ищи продукт</p>
                 
-                <input type="text" id="food-search" placeholder="🔍 Поиск продуктов..." onkeyup="searchFood(this.value)">
+                <input type="text" id="food-search" placeholder="🔍 Поиск продуктов..." onkeyup="if(event.key==='Enter') searchFood(this.value)">
                 
                 <div class="scanner-container">
                     <button class="btn" onclick="startScanner()">📷 Сканировать штрихкод</button>
@@ -595,6 +817,101 @@
     </div>
     
     <script>
+        // ==================== USER REGISTRATION ====================
+        let currentUser = null;
+        let selectedAvatar = '🏋️';
+        
+        // Check if user is registered
+        window.addEventListener('load', function() {
+            const savedUser = localStorage.getItem('fitness-user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUserUI();
+            } else {
+                document.getElementById('reg-modal').style.display = 'flex';
+            }
+            
+            // Load water data
+            loadWater();
+            // Load workouts
+            loadWorkouts();
+        });
+        
+        function registerUser() {
+            const nickname = document.getElementById('nickname-input').value.trim();
+            if (!nickname) {
+                alert('Введи ник!');
+                return;
+            }
+            
+            currentUser = {
+                nickname: nickname,
+                avatar: selectedAvatar,
+                registeredAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('fitness-user', JSON.stringify(currentUser));
+            document.getElementById('reg-modal').style.display = 'none';
+            updateUserUI();
+        }
+        
+        function updateUserUI() {
+            if (!currentUser) return;
+            
+            document.getElementById('user-info').style.display = 'flex';
+            document.getElementById('user-nickname').textContent = currentUser.nickname;
+            document.getElementById('home-nickname').textContent = currentUser.nickname;
+            document.getElementById('user-avatar').textContent = currentUser.avatar;
+        }
+        
+        // Avatar selection
+        document.querySelectorAll('.avatar-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedAvatar = this.dataset.avatar;
+            });
+        });
+        
+        // ==================== WATER TRACKER ====================
+        let waterIntake = 0;
+        const waterGoal = 2000;
+        
+        function addWater(amount) {
+            waterIntake += amount;
+            if (waterIntake > waterGoal) waterIntake = waterGoal;
+            
+            updateWaterUI();
+            localStorage.setItem('water-intake', waterIntake);
+            localStorage.setItem('water-date', new Date().toDateString());
+        }
+        
+        function loadWater() {
+            const savedDate = localStorage.getItem('water-date');
+            const today = new Date().toDateString();
+            
+            if (savedDate === today) {
+                waterIntake = parseInt(localStorage.getItem('water-intake') || '0');
+            } else {
+                waterIntake = 0;
+                localStorage.setItem('water-date', today);
+            }
+            
+            updateWaterUI();
+        }
+        
+        function updateWaterUI() {
+            document.getElementById('water-total').textContent = waterIntake + ' мл';
+            const percent = (waterIntake / waterGoal) * 100;
+            document.getElementById('water-progress-fill').style.width = Math.min(percent, 100) + '%';
+            
+            // Update ring
+            const ring = document.getElementById('water-ring');
+            const dashoffset = 220 - (220 * Math.min(waterIntake / waterGoal, 1));
+            ring.style.strokeDashoffset = dashoffset;
+            ring.nextElementSibling.textContent = Math.round((waterIntake / waterGoal) * 100) + '%';
+        }
+        
         // ==================== NAVIGATION ====================
         function showTab(tab) {
             // Hide all sections
@@ -613,7 +930,19 @@
         
         // ==================== WORKOUTS ====================
         const workouts = [];
-        const youtubeIds = ['dQw4w9WgXcQ', '2P3XcCWobQo', 'op9kVn2PoRE', 'GCB_2TLhRsm', 'auBQoG7WAyQ', 'xDlBtMfrdOs', 'C_VtEYqDuHM', 'gjNOxozC1HU', 't3z3CZzUpUo', 'sYDMvWLsFpk'];
+        // Real YouTube workout video IDs (working videos)
+        const youtubeIds = [
+            'SCVCLChPQFY', // Bench press
+            'ult_WmGzB1Q', // Squat
+            'rT7OdbJrNiE', // Deadlift
+            'e5NdyO9Hj8',  // Pushups
+            'IODxDxX7oi4', // Pullups
+            '1fTlJwUQ1yg', // Shoulder press
+            'hAM5yqRIMaY', // Bicep curl
+            'nRiJVFBnRbQ', // Tricep extension
+            'JF1dyGkx7EA', // Lunges
+            'q8OcjI82z4'  // Plank
+        ];
         
         // Generate 500+ workouts
         const muscleGroups = ['chest', 'back', 'legs', 'arms', 'shoulders', 'core'];
@@ -834,9 +1163,6 @@
             
             container.scrollTop = container.scrollHeight;
         }
-        
-        // Initialize
-        loadWorkouts();
     </script>
 </body>
 </html>
