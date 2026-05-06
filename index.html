@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <title>Личный фитнес-тренер</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon-192.png" type="image/png">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" data-tab="home">🏠<span>Главная</span></button>
+        <button class="nav-btn" data-tab="workouts">💪<span>Тренировки</span></button>
+        <button class="nav-btn" data-tab="nutrition">🥗<span>Питание</span></button>
+        <button class="nav-btn" data-tab="progress">📊<span>Прогресс</span></button>
+        <button class="nav-btn" data-tab="coach">🤖<span>AI Коуч</span></button>
+    </nav>
+
+    <!-- Главная -->
+    <div id="home" class="tab-content active">
+        <header class="header">
+            <div class="container">
+                <h1>🏋️ Твой личный фитнес-тренер</h1>
+                <p class="subtitle">Достигай результатов с AI-коучем 24/7</p>
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentWeight">--</div>
+                        <div class="stat-label">Вес (кг)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Тренировок</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">85%</div>
+                        <div class="stat-label">Цель</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="features container">
+            <h2>💪 Всё для твоих результатов</h2>
+            <div class="features-grid">
+                <div class="feature-card" onclick="switchTab('workouts')">
+                    <div class="feature-icon">🧘</div>
+                    <h3>Умные тренировки</h3>
+                    <p>Персональные планы с видео</p>
+                </div>
+                <div class="feature-card" onclick="switchTab('nutrition')">
+                    <div class="feature-icon">🥗</div>
+                    <h3>Питание и КБЖУ</h3>
+                    <p>Сканируй продукты, считай калории</p>
+                </div>
+                <div class="feature-card" onclick="switchTab('coach')">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-коуч 24/7</h3>
+                    <p>Твой виртуальный тренер на связи</p>
+                </div>
+                <div class="feature-card" onclick="switchTab('progress')">
+                    <div class="feature-icon">📊</div>
+                    <h3>Прогресс</h3>
+                    <p>Отслеживай динамику веса и силы</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Тренировки -->
+    <div id="workouts" class="tab-content">
+        <div class="container">
+            <h2>💪 Тренировки</h2>
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-placeholder" onclick="playVideo('https://www.youtube.com/embed/MLp4AYyaSUQ')">
+                        <div class="play-icon">▶️</div>
+                        <p>Жим лёжа: техника</p>
+                    </div>
+                    <h4>Грудь и трицепс</h4>
+                    <p>12 мин • Средний уровень</p>
+                </div>
+                <div class="video-card">
+                    <div class="video-placeholder" onclick="playVideo('https://www.youtube.com/embed/ykJmrZ5v0O8')">
+                        <div class="play-icon">▶️</div>
+                        <p>Приседания: правильная техника</p>
+                    </div>
+                    <h4>Ноги</h4>
+                    <p>15 мин • Начинающий</p>
+                </div>
+                <div class="video-card">
+                    <div class="video-placeholder" onclick="playVideo('https://www.youtube.com/embed/V-HqzbSNJ3Y')">
+                        <div class="play-icon">▶️</div>
+                        <p>Планка: как держать долго</p>
+                    </div>
+                    <h4>Пресс и кор</h4>
+                    <p>10 мин • Все уровни</p>
+                </div>
+            </div>
+            <div id="videoPlayer" class="video-modal" onclick="this.classList.remove('active')">
+                <iframe id="ytFrame" width="100%" height="300" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Питание -->
+    <div id="nutrition" class="tab-content">
+        <div class="container">
+            <h2>🥗 Питание и КБЖУ</h2>
+            <div class="action-buttons">
+                <button class="scan-btn" onclick="startScanner()">📷 Сканировать продукт</button>
+                <div class="search-box" style="flex:1;">
+                    <input type="text" id="foodSearch" placeholder="Поиск продукта (например: курица, рис)..." onkeyup="searchFood(this.value)">
+                </div>
+            </div>
+            <div id="foodResults"></div>
+            <div id="scanner-container" style="display:none; margin: 20px 0; text-align: center;">
+                <div id="reader" style="width: 300px; margin: 0 auto;"></div>
+                <button class="cta-button" onclick="stopScanner()" style="margin-top: 10px;">❌ Остановить сканирование</button>
+            </div>
+            <div class="daily-summary">
+                <h3>📋 Твой рацион сегодня</h3>
+                <div class="macros">
+                    <div class="macro"><span>Калории</span><strong id="totalCals">0</strong> / 2000 ккал</div>
+                    <div class="macro"><span>Белки</span><strong id="totalProt">0</strong> г</div>
+                    <div class="macro"><span>Жиры</span><strong id="totalFats">0</strong> г</div>
+                    <div class="macro"><span>Углеводы</span><strong id="totalCarbs">0</strong> г</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Прогресс -->
+    <div id="progress" class="tab-content">
+        <div class="container">
+            <h2>📊 Прогресс и метрики</h2>
+            <div class="progress-form">
+                <h3>📝 Записать результаты</h3>
+                <div class="form-group">
+                    <label>Вес (кг)</label>
+                    <input type="number" id="newWeight" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Объём талии (см)</label>
+                    <input type="number" id="newWaist" step="0.5">
+                </div>
+                <button class="cta-button" onclick="saveProgress()">Сохранить</button>
+            </div>
+            <div class="history-section">
+                <h3>📈 История измерений</h3>
+                <ul id="progressList" class="progress-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Коуч -->
+    <div id="coach" class="tab-content">
+        <div class="container">
+            <h2>🤖 AI-коуч</h2>
+            <div class="chat-container">
+                <div id="chatMessages" class="chat-messages">
+                    <div class="message bot">Привет! Я твой AI-коуч. Спрашивай о тренировках, питании или мотивации! 💪</div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="userMessage" placeholder="Напиши сообщение..." onkeyup="if(event.key==='Enter') sendMessage()">
+                    <button onclick="sendMessage()">➤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Сервис-воркер -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
+    </script>
+    <!-- Библиотека для графиков -->
+    <script src="chart.min.js"></script>
+    <!-- Библиотека для сканирования штрих-кодов -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
