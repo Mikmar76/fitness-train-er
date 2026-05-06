@@ -1,0 +1,562 @@
+/* Обновленные стили для фитнес-тренера */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+    padding-bottom: 80px; /* Место для нижней навигации */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Заголовок */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* Быстрая статистика */
+.quick-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.2);
+    padding: 15px 25px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Вкладки (контент) */
+.tab-content {
+    display: none;
+    padding: 20px 0;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Нижняя навигация */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    color: #666;
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.nav-btn.active {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.nav-btn span {
+    font-size: 0.7rem;
+}
+
+/* Карточки функций */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.feature-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.feature-card h3 {
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+/* Видео карточки */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.video-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.video-placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+}
+
+.play-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.video-card h4 {
+    padding: 15px;
+    color: #333;
+}
+
+.video-card p {
+    padding: 0 15px 15px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Модальное окно для видео */
+.video-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-modal.active {
+    display: flex;
+}
+
+.video-modal iframe {
+    max-width: 90%;
+    max-height: 80%;
+}
+
+/* Питание */
+.search-box {
+    margin: 20px 0;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+#foodResults {
+    margin-top: 20px;
+}
+
+.food-item {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.food-info h4 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.food-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.add-food {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.daily-summary {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.macros {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.macro {
+    text-align: center;
+}
+
+.macro span {
+    display: block;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.macro strong {
+    font-size: 1.5rem;
+    color: #667eea;
+}
+
+/* Прогресс */
+.progress-form {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.cta-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+}
+
+.history {
+    margin-top: 30px;
+}
+
+.history ul {
+    list-style: none;
+    padding: 0;
+}
+
+.history li {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Чат с AI */
+.chat-container {
+    background: white;
+    border-radius: 15px;
+    margin-top: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 80%;
+}
+
+.message.user {
+    background: #667eea;
+    color: white;
+    margin-left: auto;
+}
+
+.message.bot {
+    background: #f0f2f5;
+    color: #333;
+}
+
+.chat-input {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    font-size: 1rem;
+}
+
+.chat-input button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* Заголовки секций */
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .macros {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .quick-stats {
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 10px 15px;
+    }
+}
+
+/* Сканер продуктов */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    align-items: center;
+}
+
+.scan-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    white-space: nowrap;
+    transition: transform 0.3s ease;
+}
+
+.scan-btn:hover {
+    transform: translateY(-2px);
+}
+
+#scanner-container {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+#reader {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#reader video {
+    width: 100% !important;
+    border-radius: 10px;
+}
+
+#reader__dashboard_section_swapline {
+    display: none !important;
+}
+
+#reader__status_span {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* История прогресса */
+.history-section {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.progress-list {
+    list-style: none;
+    padding:0;
+    margin:0;
+}
+
+.progress-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom:1px solid #f0f0f0;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.progress-list li:last-child {
+    border-bottom: none;
+}
+
+.progress-list .date {
+    font-weight: 600;
+    color: #667eea;
+    min-width: 80px;
+}
+
+.progress-list .weight {
+    font-weight: 500;
+    color: #333;
+}
+
+.progress-list .waist {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.progress-list .trend {
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+
+.progress-list .trend.up::before {
+    content: '📈';
+}
+
+.progress-list .trend.down::before {
+    content: '📉';
+}
+
+.progress-list .trend.same::before {
+    content: '➡️';
+}
