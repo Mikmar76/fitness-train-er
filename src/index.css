@@ -1,17 +1,2 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-body {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-}
-
-.glass {
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 247, 255, 0.2);
-  border-radius: 20px;
-}
-
-.neon-cyan { color: #00f7ff; text-shadow: 0 0 10px rgba(0, 247, 255, 0.7); }
-.neon-orange { color: #ff6b35; text-shadow: 0 0 10px rgba(255, 107, 53, 0.7); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { -webkit-font-smoothing: antialiased; }
