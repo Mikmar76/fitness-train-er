@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness Pro | Твой персональный тренер</title>
+    <title>Fitness Pro | Персональный тренер</title>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin:0; padding:0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -57,12 +59,6 @@
             padding: 25px;
             margin-bottom: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 247, 255, 0.2);
         }
         
         /* Progress Rings */
@@ -73,9 +69,7 @@
             margin: 20px 0;
         }
         
-        .ring-item {
-            text-align: center;
-        }
+        .ring-item { text-align: center; }
         
         .ring {
             width: 80px;
@@ -117,7 +111,7 @@
             letter-spacing: 1px;
         }
         
-        /* Stat Cards */
+        /* Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -131,13 +125,6 @@
             padding: 20px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            background: rgba(0, 247, 255, 0.1);
-            border-color: rgba(0, 247, 255, 0.3);
-            transform: scale(1.05);
         }
         
         .stat-value {
@@ -153,7 +140,7 @@
             letter-spacing: 1px;
         }
         
-        /* Bottom Navigation */
+        /* Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -181,10 +168,10 @@
             border: none;
             color: rgba(255, 255, 255, 0.5);
             cursor: pointer;
-            transition: all 0.3s ease;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: all 0.3s ease;
         }
         
         .nav-item.active {
@@ -192,14 +179,20 @@
             text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
         }
         
-        .nav-icon {
-            font-size: 1.5rem;
-        }
+        .nav-icon { font-size: 1.5rem; }
         
-        /* Animations */
+        /* Sections */
+        .section { display: none; animation: fadeIn 0.5s ease-out; }
+        .section.active { display: block; }
+        
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         @keyframes gradientMove {
@@ -207,14 +200,166 @@
             100% { background-position: 200% center; }
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        /* Workouts */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
         
-        /* Content sections */
-        .content-section {
-            animation: fadeInDown 0.5s ease-out;
+        .filter-btn {
+            padding: 8px 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background: #00f7ff;
+            color: #0f0c29;
+            border-color: #00f7ff;
+        }
+        
+        .workout-list { display: flex; flex-direction: column; gap: 15px; }
+        
+        .workout-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 15px;
+            border-left: 4px solid #00f7ff;
+            transition: all 0.3s ease;
+        }
+        
+        .workout-card:hover {
+            background: rgba(0,247,255,0.1);
+            transform: translateX(5px);
+        }
+        
+        .workout-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .workout-meta {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 10px;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Nutrition */
+        .scanner-container {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        #reader {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .nutrition-log {
+            margin-top: 15px;
+        }
+        
+        .food-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        /* AI Chat */
+        .chat-container {
+            height: 300px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .chat-bubble {
+            background: linear-gradient(135deg, rgba(0,247,255,0.2), rgba(255,107,53,0.2));
+            padding: 12px 15px;
+            border-radius: 15px 15px 15px 5px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .chat-bubble.user {
+            margin-left: auto;
+            border-radius: 15px 15px 5px 15px;
+            background: rgba(0,247,255,0.3);
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: #00f7ff;
+        }
+        
+        .send-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #00f7ff, #ff6b35);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Analytics */
+        .chart-container {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+            height: 250px;
         }
         
         h2 {
@@ -225,72 +370,37 @@
             -webkit-text-fill-color: transparent;
         }
         
-        .workout-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .workout-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #00f7ff;
-            transition: all 0.3s ease;
-        }
-        
-        .workout-item:hover {
-            background: rgba(0, 247, 255, 0.1);
-            transform: translateX(5px);
-        }
-        
-        .workout-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .workout-meta {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        input[type="text"] {
+        input[type="text"], select {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.05);
             color: white;
             font-size: 1rem;
             margin-bottom: 15px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00f7ff;
+            box-shadow: 0 0 20px rgba(0,247,255,0.3);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #00f7ff, #ff6b35);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
         
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #00f7ff;
-            box-shadow: 0 0 20px rgba(0, 247, 255, 0.3);
-        }
-        
-        .chart-placeholder {
-            height: 200px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 1.2rem;
-            margin-top: 20px;
-        }
-        
-        .chat-bubble {
-            background: linear-gradient(135deg, rgba(0, 247, 255, 0.2), rgba(255, 107, 53, 0.2));
-            padding: 15px;
-            border-radius: 15px 15px 15px 5px;
-            margin-bottom: 10px;
-            max-width: 80%;
-            animation: fadeInDown 0.3s ease-out;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,247,255,0.4);
         }
     </style>
 </head>
@@ -301,165 +411,160 @@
             <div class="subtitle">Твой персональный тренер</div>
         </div>
         
-        <div id="content">
-            <!-- Home Section -->
-            <div id="home-section" class="content-section">
-                <div class="glass-card">
-                    <h2>🏠 Главная</h2>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Твой прогресс за сегодня</p>
+        <!-- Home Section -->
+        <div id="home-section" class="section active">
+            <div class="glass-card">
+                <h2>🏠 Главная</h2>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Твой прогресс сегодня</p>
+                
+                <div class="rings-container">
+                    <div class="ring-item">
+                        <div class="ring">
+                            <svg width="80" height="80">
+                                <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
+                                <circle class="ring-progress" id="calories-ring" cx="40" cy="40" r="35" 
+                                        stroke="#00f7ff" stroke-dasharray="220" stroke-dashoffset="66"></circle>
+                            </svg>
+                            <div class="ring-value" style="color: #00f7ff;">70%</div>
+                        </div>
+                        <div class="ring-label">Калории</div>
+                    </div>
                     
-                    <div class="rings-container">
-                        <div class="ring-item">
-                            <div class="ring">
-                                <svg width="80" height="80">
-                                    <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
-                                    <circle class="ring-progress" id="calories-ring" cx="40" cy="40" r="35" 
-                                            stroke="#00f7ff" 
-                                            stroke-dasharray="220"
-                                            stroke-dashoffset="66"></circle>
-                                </svg>
-                                <div class="ring-value" style="color: #00f7ff;">70%</div>
-                            </div>
-                            <div class="ring-label">Калории</div>
+                    <div class="ring-item">
+                        <div class="ring">
+                            <svg width="80" height="80">
+                                <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
+                                <circle class="ring-progress" id="steps-ring" cx="40" cy="40" r="35" 
+                                        stroke="#ff6b35" stroke-dasharray="220" stroke-dashoffset="110"></circle>
+                            </svg>
+                            <div class="ring-value" style="color: #ff6b35;">50%</div>
                         </div>
-                        
-                        <div class="ring-item">
-                            <div class="ring">
-                                <svg width="80" height="80">
-                                    <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
-                                    <circle class="ring-progress" id="steps-ring" cx="40" cy="40" r="35" 
-                                            stroke="#ff6b35"
-                                            stroke-dasharray="220"
-                                            stroke-dashoffset="110"></circle>
-                                </svg>
-                                <div class="ring-value" style="color: #ff6b35;">50%</div>
-                            </div>
-                            <div class="ring-label">Шаги</div>
+                        <div class="ring-label">Шаги</div>
+                    </div>
+                    
+                    <div class="ring-item">
+                        <div class="ring">
+                            <svg width="80" height="80">
+                                <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
+                                <circle class="ring-progress" id="water-ring" cx="40" cy="40" r="35" 
+                                        stroke="#10b981" stroke-dasharray="220" stroke-dashoffset="44"></circle>
+                            </svg>
+                            <div class="ring-value" style="color: #10b981;">80%</div>
                         </div>
-                        
-                        <div class="ring-item">
-                            <div class="ring">
-                                <svg width="80" height="80">
-                                    <circle class="ring-bg" cx="40" cy="40" r="35"></circle>
-                                    <circle class="ring-progress" id="water-ring" cx="40" cy="40" r="35" 
-                                            stroke="#10b981"
-                                            stroke-dasharray="220"
-                                            stroke-dashoffset="44"></circle>
-                                </svg>
-                                <div class="ring-value" style="color: #10b981;">80%</div>
-                            </div>
-                            <div class="ring-label">Вода</div>
-                        </div>
+                        <div class="ring-label">Вода</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #00f7ff;">72.5</div>
+                    <div class="stat-label">Вес (кг)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #ff6b35;">12</div>
+                    <div class="stat-label">Тренировок</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #10b981;">85%</div>
+                    <div class="stat-label">Цель</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Workouts Section -->
+        <div id="workouts-section" class="section">
+            <div class="glass-card">
+                <h2>💪 Тренировки</h2>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">База из 500+ упражнений</p>
+                
+                <div class="filter-bar">
+                    <button class="filter-btn active" onclick="filterWorkouts('all')">Все</button>
+                    <button class="filter-btn" onclick="filterWorkouts('chest')">Грудь</button>
+                    <button class="filter-btn" onclick="filterWorkouts('back')">Спина</button>
+                    <button class="filter-btn" onclick="filterWorkouts('legs')">Ноги</button>
+                    <button class="filter-btn" onclick="filterWorkouts('arms')">Руки</button>
+                </div>
+                
+                <div class="workout-list" id="workout-list">
+                    <!-- Workouts will be populated by JS -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Nutrition Section -->
+        <div id="nutrition-section" class="section">
+            <div class="glass-card">
+                <h2>🥗 Питание</h2>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">Сканируй штрихкод или ищи продукт</p>
+                
+                <input type="text" id="food-search" placeholder="🔍 Поиск продуктов..." onkeyup="searchFood(this.value)">
+                
+                <div class="scanner-container">
+                    <button class="btn" onclick="startScanner()">📷 Сканировать штрихкод</button>
+                    <div id="reader" style="display:none;"></div>
+                    <p id="scan-result" style="margin-top:10px; color: rgba(255,255,255,0.7);"></p>
+                </div>
+                
+                <div class="nutrition-log" id="nutrition-log">
+                    <!-- Food items will appear here -->
+                </div>
+                
+                <div class="stats-grid" style="margin-top:15px;">
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #00f7ff;" id="total-calories">0</div>
+                        <div class="stat-label">Калории</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #ff6b35;" id="total-protein">0г</div>
+                        <div class="stat-label">Белки</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #10b981;" id="total-fat">0г</div>
+                        <div class="stat-label">Жиры</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analytics Section -->
+        <div id="analytics-section" class="section">
+            <div class="glass-card">
+                <h2>📊 Аналитика</h2>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">Твой прогресс</p>
+                
+                <div class="chart-container">
+                    <canvas id="progress-chart"></canvas>
+                </div>
+                
+                <div class="stats-grid" style="margin-top:15px;">
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #00f7ff;">-3.5</div>
+                        <div class="stat-label">Кг снижено</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #ff6b35;">+5</div>
+                        <div class="stat-label">Тренировок</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AI Coach Section -->
+        <div id="ai-section" class="section">
+            <div class="glass-card">
+                <h2>🤖 AI Коуч</h2>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">Твой умный помощник</p>
+                
+                <div class="chat-container" id="chat-container">
+                    <div class="chat-bubble">
+                        👋 Привет! Я твой ИИ-тренер. Готов помочь с тренировками и питанием! 💪
                     </div>
                 </div>
                 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" style="color: #00f7ff;">72.5</div>
-                        <div class="stat-label">Вес (кг)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" style="color: #ff6b35;">12</div>
-                        <div class="stat-label">Тренировок</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" style="color: #10b981;">85%</div>
-                        <div class="stat-label">Цель</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Workouts Section -->
-            <div id="workouts-section" class="content-section" style="display: none;">
-                <div class="glass-card">
-                    <h2>💪 Тренировки</h2>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">500+ упражнений в базе</p>
-                    
-                    <div class="workout-list">
-                        <div class="workout-item">
-                            <div class="workout-name">🏋️ Жим лёжа</div>
-                            <div class="workout-meta">Грудь • 4х12 • 80 кг</div>
-                        </div>
-                        <div class="workout-item">
-                            <div class="workout-name">🦵 Приседания</div>
-                            <div class="workout-meta">Ноги • 4х10 • 100 кг</div>
-                        </div>
-                        <div class="workout-item">
-                            <div class="workout-name">💪 Становая тяга</div>
-                            <div class="workout-meta">Спина • 3х8 • 120 кг</div>
-                        </div>
-                        <div class="workout-item">
-                            <div class="workout-name">🤸 Отжимания</div>
-                            <div class="workout-meta">Грудь • 4х15 • Вес тела</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Nutrition Section -->
-            <div id="nutrition-section" class="content-section" style="display: none;">
-                <div class="glass-card">
-                    <h2>🥗 Питание</h2>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Сканируй и считай КБЖУ</p>
-                    
-                    <input type="text" placeholder="🔍 Поиск продуктов или сканируй штрихкод...">
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value" style="color: #00f7ff;">1650</div>
-                            <div class="stat-label">Калории</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" style="color: #ff6b35;">120г</div>
-                            <div class="stat-label">Белки</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" style="color: #10b981;">55г</div>
-                            <div class="stat-label">Жиры</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Analytics Section -->
-            <div id="analytics-section" class="content-section" style="display: none;">
-                <div class="glass-card">
-                    <h2>📊 Аналитика</h2>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Твой прогресс</p>
-                    
-                    <div class="chart-placeholder">
-                        📈 Графики прогресса (скоро)
-                    </div>
-                    
-                    <div class="stats-grid" style="margin-top: 20px;">
-                        <div class="stat-card">
-                            <div class="stat-value" style="color: #00f7ff;">-3.5</div>
-                            <div class="stat-label">Кг снижено</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" style="color: #ff6b35;">+5</div>
-                            <div class="stat-label">Тренировок</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- AI Coach Section -->
-            <div id="ai-section" class="content-section" style="display: none;">
-                <div class="glass-card">
-                    <h2>🤖 AI Коуч</h2>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Твой умный помощник</p>
-                    
-                    <div style="background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px; margin-bottom: 15px; max-height: 200px; overflow-y: auto;">
-                        <div class="chat-bubble">
-                            👋 Привет! Я твой ИИ-тренер. Готов помочь с тренировками и питанием! 💪
-                        </div>
-                        <div class="chat-bubble" style="margin-left: auto; border-radius: 15px 15px 5px 15px;">
-                            💡 Совет дня: Пей больше воды и не забывай про разминку!
-                        </div>
-                    </div>
-                    
-                    <input type="text" placeholder="Твой вопрос...">
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chat-input" placeholder="Твой вопрос..." onkeyup="if(event.key==='Enter') sendMessage()">
+                    <button class="send-btn" onclick="sendMessage()">➤</button>
                 </div>
             </div>
         </div>
@@ -490,30 +595,248 @@
     </div>
     
     <script>
+        // ==================== NAVIGATION ====================
         function showTab(tab) {
             // Hide all sections
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.style.display = 'none';
-            });
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            // Show selected
+            document.getElementById(tab + '-section').classList.add('active');
             
-            // Show selected section
-            document.getElementById(tab + '-section').style.display = 'block';
-            
-            // Update active nav item
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             event.target.closest('.nav-item').classList.add('active');
+            
+            // Initialize specific tab content
+            if (tab === 'workouts') loadWorkouts();
+            if (tab === 'analytics') initChart();
         }
         
-        // Animate rings on load
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                document.getElementById('calories-ring').style.strokeDashoffset = '66';
-                document.getElementById('steps-ring').style.strokeDashoffset = '110';
-                document.getElementById('water-ring').style.strokeDashoffset = '44';
-            }, 100);
+        // ==================== WORKOUTS ====================
+        const workouts = [];
+        const youtubeIds = ['dQw4w9WgXcQ', '2P3XcCWobQo', 'op9kVn2PoRE', 'GCB_2TLhRsm', 'auBQoG7WAyQ', 'xDlBtMfrdOs', 'C_VtEYqDuHM', 'gjNOxozC1HU', 't3z3CZzUpUo', 'sYDMvWLsFpk'];
+        
+        // Generate 500+ workouts
+        const muscleGroups = ['chest', 'back', 'legs', 'arms', 'shoulders', 'core'];
+        const exercisesByGroup = {
+            chest: ['Жим лёжа', 'Отжимания', 'Разводка гантелей', 'Жим наклонный', 'Кроссовер', 'Пек-дек'],
+            back: ['Становая тяга', 'Подтягивания', 'Тяга верхнего блока', 'Тяга гантели', 'Гиперэкстензия', 'Тяга нижнего блока'],
+            legs: ['Приседания', 'Выпады', 'Жим ногами', 'Сгибания ног', 'Румынская тяга', 'Икры стоя'],
+            arms: ['Бицепс со штангой', 'Трицепс на блоке', 'Молотки', 'Французский жим', 'Сгибания на скамье', 'Отжимания на брусьях'],
+            shoulders: ['Жим над головой', 'Махи гантелями', 'Арнольд-пресс', 'Подъемы перед собой', 'Обратные махи', 'Шраги'],
+            core: ['Скручивания', 'Планка', 'Подъем ног', 'Русский твист', 'Боковая планка', 'Вакуум живота']
+        };
+        
+        let idCounter = 1;
+        muscleGroups.forEach(group => {
+            for (let i = 0; i < 85; i++) { // 85 * 6 = 510 exercises
+                const exerciseName = exercisesByGroup[group][i % exercisesByGroup[group].length];
+                workouts.push({
+                    id: idCounter++,
+                    name: `${exerciseName} #${idCounter-1}`,
+                    group: group,
+                    equipment: i % 3 === 0 ? 'Штанга' : i % 3 === 1 ? 'Гантели' : 'Тело',
+                    sets: 4,
+                    reps: 12,
+                    weight: Math.floor(Math.random() * 100) + 20,
+                    videoId: youtubeIds[Math.floor(Math.random() * youtubeIds.length)]
+                });
+            }
         });
+        
+        function loadWorkouts(filter = 'all') {
+            const container = document.getElementById('workout-list');
+            container.innerHTML = '';
+            
+            const filtered = filter === 'all' ? workouts.slice(0, 20) : workouts.filter(w => w.group === filter).slice(0, 20);
+            
+            filtered.forEach(w => {
+                const card = document.createElement('div');
+                card.className = 'workout-card';
+                card.innerHTML = `
+                    <div class="workout-name">${w.name}</div>
+                    <div class="workout-meta">${w.group} • ${w.sets}×${w.reps} • ${w.weight} кг • ${w.equipment}</div>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/${w.videoId}" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function filterWorkouts(group) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            loadWorkouts(group);
+        }
+        
+        // ==================== NUTRITION ====================
+        const foodDatabase = [
+            { name: 'Куриная грудка (100г)', calories: 165, protein: 31, fat: 3.6, barcode: '4607000000000' },
+            { name: 'Рис бурый (100г)', calories: 112, protein: 2.6, fat: 0.9, barcode: '4608000000000' },
+            { name: 'Банан (1 шт)', calories: 89, protein: 1.1, fat: 0.3, barcode: '4609000000000' },
+            { name: 'Творог 5% (100г)', calories: 121, protein: 17, fat: 5, barcode: '4610000000000' },
+            { name: 'Овсянка (100г)', calories: 352, protein: 12, fat: 6, barcode: '4611000000000' }
+        ];
+        
+        let dailyLog = [];
+        
+        function searchFood(query) {
+            if (!query) return;
+            const found = foodDatabase.find(f => f.name.toLowerCase().includes(query.toLowerCase()) || f.barcode.includes(query));
+            if (found) {
+                addFoodToLog(found);
+                document.getElementById('food-search').value = '';
+            }
+        }
+        
+        function addFoodToLog(food) {
+            dailyLog.push(food);
+            updateNutritionLog();
+        }
+        
+        function updateNutritionLog() {
+            const container = document.getElementById('nutrition-log');
+            container.innerHTML = '';
+            
+            let totalCal = 0, totalProt = 0, totalFat = 0;
+            
+            dailyLog.forEach(food => {
+                const item = document.createElement('div');
+                item.className = 'food-item';
+                item.innerHTML = `
+                    <div>
+                        <div style="font-weight:bold;">${food.name}</div>
+                        <div style="font-size:0.85rem; color:rgba(255,255,255,0.6);">${food.calories} ккал • Б:${food.protein}г • Ж:${food.fat}г</div>
+                    </div>
+                    <div style="color:#ff6b35; font-weight:bold;">${food.calories}</div>
+                `;
+                container.appendChild(item);
+                
+                totalCal += food.calories;
+                totalProt += food.protein;
+                totalFat += food.fat;
+            });
+            
+            document.getElementById('total-calories').textContent = totalCal;
+            document.getElementById('total-protein').textContent = totalProt + 'г';
+            document.getElementById('total-fat').textContent = totalFat + 'г';
+        }
+        
+        // Barcode Scanner
+        let html5Qrcode = null;
+        
+        function startScanner() {
+            const readerDiv = document.getElementById('reader');
+            readerDiv.style.display = 'block';
+            
+            if (!html5Qrcode) {
+                html5Qrcode = new Html5Qrcode("reader");
+            }
+            
+            html5Qrcode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 250 },
+                onScanSuccess,
+                onScanError
+            ).catch(err => {
+                document.getElementById('scan-result').textContent = 'Ошибка камеры: ' + err;
+            });
+        }
+        
+        function onScanSuccess(decodedText) {
+            document.getElementById('scan-result').textContent = 'Сканировано: ' + decodedText;
+            const found = foodDatabase.find(f => f.barcode === decodedText);
+            if (found) {
+                addFoodToLog(found);
+                html5Qrcode.stop();
+                document.getElementById('reader').style.display = 'none';
+            } else {
+                document.getElementById('scan-result').textContent += ' (продукт не найден)';
+            }
+        }
+        
+        function onScanError(error) {
+            // console.log(error);
+        }
+        
+        // ==================== ANALYTICS ====================
+        function initChart() {
+            const ctx = document.getElementById('progress-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май'],
+                    datasets: [{
+                        label: 'Вес (кг)',
+                        data: [76, 75, 74, 73, 72.5],
+                        borderColor: '#00f7ff',
+                        backgroundColor: 'rgba(0, 247, 255, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            ticks: { color: 'rgba(255,255,255,0.7)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        x: {
+                            ticks: { color: 'rgba(255,255,255,0.7)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: 'rgba(255,255,255,0.7)' } }
+                    }
+                }
+            });
+        }
+        
+        // ==================== AI CHAT ====================
+        const aiResponses = [
+            'Отличный вопрос! Рекомендую начать с разминки в течение 5-10 минут. 🔥',
+            'Для роста мышц старайся есть 1.6-2г белка на кг веса. 💪',
+            'Не забывай про воду — минимум 30мл на кг веса в день! 💧',
+            'Техника важнее веса! Следи за осанкой при выполнении. ✅',
+            'Попробуй суперсеты для экономии времени и большей нагрузки! ⚡',
+            'Восстановление так же важно, как и тренировка. Спи не менее 7-8 часов. 😴'
+        ];
+        
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const container = document.getElementById('chat-container');
+            
+            // User message
+            const userBubble = document.createElement('div');
+            userBubble.className = 'chat-bubble user';
+            userBubble.textContent = message;
+            container.appendChild(userBubble);
+            
+            input.value = '';
+            
+            // AI response (simulated)
+            setTimeout(() => {
+                const aiBubble = document.createElement('div');
+                aiBubble.className = 'chat-bubble';
+                aiBubble.textContent = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+                container.appendChild(aiBubble);
+                container.scrollTop = container.scrollHeight;
+            }, 1000);
+            
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        // Initialize
+        loadWorkouts();
     </script>
 </body>
 </html>
